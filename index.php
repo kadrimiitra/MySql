@@ -17,10 +17,18 @@
 
 <h2>Tallinna Maratoni Andmed</h2>
 
+
+
 <div class="row">
     <div class="col">
+        <?php
+        $paring = "SELECT id, nimi, riik FROM tallinn_marathon LIMIT 10";
+        $valjund = mysqli_query($yhendus, $paring);
+        ?>
         <h3>1. Päring: Kuvage id, nimi ja riik piirates tulemusi esimese 10ni.</h3>
-        <table class="table">
+         <?php print_r( $paring); ?>
+         <table class="table">
+
             <thead>
                 <tr>
                     <th class="table-primary">ID</th>
@@ -30,18 +38,12 @@
             </thead>
             <tbody>
                 <?php
-                $sql = "SELECT id, nimi, riik FROM tallinn_marathon LIMIT 10";
-                $result = $yhendus->query($sql);
-                if ($result->num_rows > 0) {
-                    while ($row = $result->fetch_assoc()) {
-                        echo "<tr>";
-                        echo "<td>" . print_r($row["id"], true) . "</td>";
-                        echo "<td>" . print_r($row["nimi"], true) . "</td>";
-                        echo "<td>" . print_r($row["riik"], true) . "</td>";
-                        echo "</tr>";
-                    }
-                } else {
-                    echo "<tr><td colspan='3'>Andmeid ei leitud</td></tr>";
+                while ($rida = mysqli_fetch_assoc($valjund)) {
+                    echo "<tr>";
+                    echo "<td>" . $rida['id'] . "</td>";
+                    echo "<td>" . $rida['nimi'] . "</td>";
+                    echo "<td>" . $rida['riik'] . "</td>";
+                    echo "</tr>";
                 }
                 ?>
             </tbody>
@@ -53,8 +55,13 @@
 
 <div class="row">
     <div class="col">
+    <?php
+        $paring = "SELECT * FROM tallinn_marathon WHERE riik = 'Finland' AND registreerimine > '03-01-2024' ORDER BY finish";
+        $valjund = mysqli_query($yhendus, $paring);
+        ?>
         <h3>2. Päring: Valige osalejad Soomest, kes on registreerunud pärast 1. märts 2024, ja sorteerige tulemused finišiaja järgi.</h3>
-        <table class="table">
+        <?php print_r( $paring); ?>
+                <table class="table">
             <thead>
                 <tr>
                     <th class="table-primary">ID</th>
@@ -66,20 +73,14 @@
             </thead>
             <tbody>
                 <?php
-                $sql = "SELECT * FROM tallinn_marathon WHERE riik = 'Finland' AND registreerimine > '03-01-2024' ORDER BY finish";
-                $result = $yhendus->query($sql);
-                if ($result->num_rows > 0) {
-                    while ($row = $result->fetch_assoc()) {
-                        echo "<tr>";
-                        echo "<td>" . print_r($row["id"], true) . "</td>";
-                        echo "<td>" . print_r($row["nimi"], true) . "</td>";
-                        echo "<td>" . print_r($row["riik"], true) . "</td>";
-                        echo "<td>" . print_r($row["registreerimine"], true) . "</td>";
-                        echo "<td>" . print_r($row["finish"], true) . "</td>";
-                        echo "</tr>";
-                    }
-                } else {
-                    echo "<tr><td colspan='5'>Andmeid ei leitud</td></tr>";
+                while ($rida = mysqli_fetch_assoc($valjund)) {
+                    echo "<tr>";
+                    echo "<td>" . $rida['id'] . "</td>";
+                    echo "<td>" . $rida['nimi'] . "</td>";
+                    echo "<td>" . $rida['riik'] . "</td>";
+                    echo "<td>" . $rida['registreerimine'] . "</td>";
+                    echo "<td>" . $rida['finish'] . "</td>";
+                    echo "</tr>";
                 }
                 ?>
             </tbody>
@@ -90,8 +91,13 @@
 
 <div class="row">
     <div class="col">
+    <?php
+        $paring = "SELECT COUNT(*) AS osalejate_arv FROM tallinn_marathon WHERE vanus BETWEEN 18 AND 30";
+        $valjund = mysqli_query($yhendus, $paring);
+        ?>
         <h3>3. Päring: Arvutage, mitu osalejat oli igas vanusegrupis 18-30.</h3>
-        <table class="table">
+        <?php print_r( $paring); ?>
+                <table class="table">
             <thead>
                 <tr>
                     <th class="table-primary">Osalejate arv vanusegrupis 18-30</th>
@@ -101,13 +107,12 @@
                 <tr>
                     <td>
                         <?php
-                        $sql = "SELECT COUNT(*) AS osalejate_arv FROM tallinn_marathon WHERE vanus BETWEEN 18 AND 30";
-                        $result = $yhendus->query($sql);
-                        if ($result->num_rows > 0) {
-                            $row = $result->fetch_assoc();
-                            print_r($row["osalejate_arv"]);
-                        } else {
-                            echo "Andmeid ei leitud";
+
+                        while ($rida = mysqli_fetch_assoc($valjund)) {
+                            echo "<tr>";
+                            echo "<td>" . $rida['osalejate_arv'] . "</td>";
+
+                            echo "</tr>";
                         }
                         ?>
                     </td>
@@ -121,8 +126,13 @@
 
 <div class="row">
     <div class="col">
+    <?php
+        $paring = "SELECT nimi FROM tallinn_marathon WHERE sugu = 'Female' AND finish IS NOT NULL ORDER BY RAND() LIMIT 3";
+        $valjund = mysqli_query($yhendus, $paring);
+        ?>
         <h3>4. Päring: Valige 3 juhuslikku osalejat, kelle sugu on 'Female' ja kes lõpetasid maratoni, kuvage nende nimed.</h3>
-        <table class="table">
+        <?php print_r($paring); ?>
+                <table class="table">
             <thead>
                 <tr>
                     <th class="table-primary">Osaleja nimi</th>
@@ -130,20 +140,17 @@
             </thead>
             <tbody>
                 <?php
-                $sql = "SELECT nimi FROM tallinn_marathon WHERE sugu = 'Female' AND finish IS NOT NULL ORDER BY RAND() LIMIT 3";
-                $result = $yhendus->query($sql);
 
-                if ($result->num_rows > 0) {
-                    while($row = $result->fetch_assoc()) {
+
+
+                    while($rida = mysqli_fetch_assoc($valjund)) {
                         echo "<tr>";
                         echo "<td>";
-                        print_r($row['nimi']);
+                        print_r($rida['nimi']);
                         echo "</td>";
                         echo "</tr>";
                     }
-                } else {
-                    echo "<tr><td>Andmeid ei leitud</td></tr>";
-                }
+
                 ?>
             </tbody>
         </table>
